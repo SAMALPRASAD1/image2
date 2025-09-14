@@ -255,10 +255,10 @@
             position: absolute;
             width: 300px;
             height: 400px;
-            background: rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.6); /* Increased opacity */
             border-radius: 15px;
-            backdrop-filter: blur(5px);
-            border: 2px solid rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(3px); /* Reduced blur */
+            border: 2px solid rgba(255, 255, 255, 0.8); /* Stronger border */
             transition: all 0.6s cubic-bezier(0.4, 0.0, 0.2, 1);
             cursor: pointer;
             overflow: hidden;
@@ -273,7 +273,7 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: linear-gradient(135deg, rgba(255,255,255,0.4) 0%, transparent 50%);
+            background: linear-gradient(135deg, rgba(255,255,255,0.2) 0%, transparent 50%);
             z-index: 2;
             transition: opacity 0.3s;
         }
@@ -285,7 +285,7 @@
             left: -100%;
             right: -100%;
             bottom: -100%;
-            background: radial-gradient(circle at center, rgba(255,255,255,0.8) 0%, transparent 50%);
+            background: radial-gradient(circle at center, rgba(255,255,255,0.5) 0%, transparent 50%); /* Reduced opacity */
             opacity: 0;
             transition: opacity 0.3s;
             pointer-events: none;
@@ -298,7 +298,7 @@
         }
 
         .card.active::after {
-            opacity: 0.2;
+            opacity: 0.1;
         }
 
         @media (max-width: 768px) {
@@ -401,9 +401,9 @@
             </div>
         </div>
     </div>
-        <audio id="bgMusic" loop>
-  <source src="romantic2.mp3" type="audio/mpeg">
-</audio>
+    <audio id="bgMusic" loop>
+        <source src="romantic2.mp3" type="audio/mpeg">
+    </audio>
 
     <script>
         function createStars() {
@@ -450,7 +450,6 @@
             const prevButton = document.querySelector('.nav-button.prev');
             const nextButton = document.querySelector('.nav-button.next');
             
-            // Array of image URLs
             const imageUrls = [
                 'pic1.jpg',
                 'pic2.jpg',
@@ -462,10 +461,8 @@
                 'pic8.jpg',
                 'pic9.jpg',
                 'pic5.jpg',
-                
             ];
             
-            // Create cards...
             for (let i = 0; i < totalCards; i++) {
                 const card = document.createElement('div');
                 card.className = 'card';
@@ -478,10 +475,8 @@
 
             function rotateGallery(direction) {
                 clearInterval(autoRotateInterval);
-                currentAngle += direction * 36; // 360 / 10 cards = 36 degrees per card
+                currentAngle += direction * 36;
                 updateCards();
-                
-                // Restart auto-rotation after 5 seconds of inactivity
                 setTimeout(() => {
                     if (!isDragging) {
                         startAutoRotate();
@@ -489,7 +484,6 @@
                 }, 5000);
             }
 
-            // Navigation button click handlers
             prevButton.addEventListener('click', () => rotateGallery(1));
             nextButton.addEventListener('click', () => rotateGallery(-1));
 
@@ -515,7 +509,6 @@
                 });
             }
 
-            // Mouse and touch event handlers
             gallery.addEventListener('mousedown', (e) => {
                 isDragging = true;
                 startX = e.clientX;
@@ -530,7 +523,6 @@
                 currentAngle = currentX + diff;
                 updateCards();
 
-                // Light up the appropriate button based on drag direction
                 const dragDirection = e.movementX;
                 prevButton.classList.toggle('active', dragDirection < 0);
                 nextButton.classList.toggle('active', dragDirection > 0);
@@ -541,8 +533,6 @@
                 gallery.style.cursor = 'grab';
                 prevButton.classList.remove('active');
                 nextButton.classList.remove('active');
-                
-                // Restart auto-rotation after 3 seconds
                 setTimeout(() => {
                     if (!isDragging) {
                         startAutoRotate();
@@ -550,7 +540,6 @@
                 }, 3000);
             });
 
-            // Touch events
             gallery.addEventListener('touchstart', (e) => {
                 isDragging = true;
                 startX = e.touches[0].clientX;
@@ -565,7 +554,6 @@
                 currentAngle = currentX + diff;
                 updateCards();
                 
-                // Light up the appropriate button based on touch direction
                 const touchDirection = e.touches[0].clientX - startX;
                 prevButton.classList.toggle('active', touchDirection < 0);
                 nextButton.classList.toggle('active', touchDirection > 0);
@@ -577,8 +565,6 @@
                 isDragging = false;
                 prevButton.classList.remove('active');
                 nextButton.classList.remove('active');
-                
-                // Restart auto-rotation after 3 seconds
                 setTimeout(() => {
                     if (!isDragging) {
                         startAutoRotate();
@@ -586,18 +572,15 @@
                 }, 3000);
             });
 
-            // Mouse wheel handler
             window.addEventListener('wheel', (e) => {
                 clearInterval(autoRotateInterval);
                 const delta = e.deltaX * 0.1 || e.deltaY * 0.1;
                 currentAngle += delta;
                 updateCards();
                 
-                // Light up the appropriate button based on wheel direction
                 prevButton.classList.toggle('active', delta > 0);
                 nextButton.classList.toggle('active', delta < 0);
                 
-                // Restart auto-rotation after 3 seconds
                 setTimeout(() => {
                     if (!isDragging) {
                         startAutoRotate();
@@ -613,47 +596,37 @@
                 }, 100);
             }
 
-            // Initial update
             updateCards();
-
-            // Start auto-rotate
             startAutoRotate();
         }
 
-        // Initialize
         document.addEventListener('DOMContentLoaded', () => {
             createStars();
             createFloatingHearts();
             createGallery();
             
-            // Move spotlight with mouse
             document.addEventListener('mousemove', (e) => {
                 const spotlight = document.querySelector('.spotlight');
                 spotlight.style.left = e.clientX + 'px';
                 spotlight.style.top = e.clientY + 'px';
             });
         });
+
         let musicStarted = false;
-
-function startMusic() {
-  if (musicStarted) return;
-
-  const bgMusic = document.getElementById("bgMusic");
-  if (bgMusic) {
-    bgMusic.volume = 0.5;
-    bgMusic.play().then(() => {
-      musicStarted = true;
-      console.log("Music started");
-    }).catch((err) => {
-      console.warn("Music autoplay blocked:", err);
-    });
-  }
-}
-
-document.body.addEventListener("click", startMusic, { once: true });
-document.body.addEventListener("touchstart", startMusic, { once: true });
-
+        function startMusic() {
+            if (musicStarted) return;
+            const bgMusic = document.getElementById("bgMusic");
+            if (bgMusic) {
+                bgMusic.volume = 0.5;
+                bgMusic.play().then(() => {
+                    musicStarted = true;
+                }).catch((err) => {
+                    console.warn("Music autoplay blocked:", err);
+                });
+            }
+        }
+        document.body.addEventListener("click", startMusic, { once: true });
+        document.body.addEventListener("touchstart", startMusic, { once: true });
     </script>
 </body>
 </html>
-
